@@ -1,0 +1,38 @@
+
+<link type="text/css" rel="stylesheet" href="/resources/css/autocomplete.css?v={$resource_version}"/>
+
+<style type="text/css">
+    .autocomplete-items {
+        width: 700px;
+        max-height: 600px;
+    }
+</style>
+
+<script type="text/javascript" src="/resources/js/autocomplete.js?v={$resource_version}"></script>
+
+{foreach from=$WorkOrder_Installer_WorkCodes item="WO_I_WC" key="key" name="WO_I_WC"}
+  <div class="autocomplete" style="width:350px;">
+      <input autocomplete="off" id="work-code-select-{$key}" type="text"
+             value="{$WorkCodes[$WO_I_WC->WorkCodeID]->WorkCodeName|escape}"
+             placeholder="Choose" style="width: 100%">
+
+      <input type="hidden" name="WorkCodes[{$key}][WorkCodeID]"
+             value="{$WO_I_WC->WorkCodeID}">
+  </div>
+{/foreach}
+
+
+<script type="text/javascript">
+    {literal}
+    const workCodeArr = Object.values(WorkCodes).map(wc => {
+        let o = {};
+        o.value = wc.WorkCodeID;
+        o.label = wc.WorkCodeName;
+        return o;
+    });
+    {/literal}
+
+    {foreach from=$WorkOrder_Installer_WorkCodes item="WO_I_WC" key="key" name="WO_I_WC"}
+    autocompleteWorkCodes(document.getElementById("work-code-select-{$key}"), document.getElementsByName("WorkCodes[{$key}][WorkCodeID]")[0], workCodeArr);
+    {/foreach}
+</script>
