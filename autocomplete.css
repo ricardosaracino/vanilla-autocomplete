@@ -1,0 +1,43 @@
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete */
+
+/*the container must be positioned relative:*/
+.autocomplete {
+    position: relative;
+    display: inline-block;
+}
+
+.autocomplete-items {
+    position: absolute;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+
+
+    background-color: #FFFFFF;
+    border: #A5A5A5 solid 1px;
+    border-collapse: collapse;
+    box-shadow: 1px 1px 1px 0 rgba(210, 210, 210, 1);
+    color: #000000;
+
+    width: 700px;
+    max-height: 600px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.autocomplete-items div {
+    text-align: left;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
