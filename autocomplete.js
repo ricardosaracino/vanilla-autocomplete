@@ -2,13 +2,13 @@
 
 let __inputs = [];
 
-function autocompleteWorkCodes(inp, arr) {
+function autocompleteWorkCodes(inputEl, hiddenEl, arr) {
 
-    __inputs.push(inp);
+    __inputs.push(inputEl);
 
     const auto = function (e) {
 
-        let a, b, i, val = this.value;
+        let a, b, i,  focusPos = 0, found = false, val = this.value;
         /*close any already open lists of autocompleted values*/
         closeAllLists();
 
@@ -23,59 +23,63 @@ function autocompleteWorkCodes(inp, arr) {
         for (i = 0; i < arr.length; i++) {
             /*check if the item starts with the same letters as the text field value:*/
 
+            if (arr[i].WorkCodeName.toUpperCase() === val.toUpperCase()) found = true;
+
             let pos = arr[i].WorkCodeName.toUpperCase().indexOf(val.toUpperCase());
 
             if (pos !== -1) {
+
+                focusPos ++;
+
                 /*create a DIV element for each matching element:*/
                 b = document.createElement("DIV");
 
-
-
-                if(pos === 0)
-                {
+                if (pos === 0) {
                     b.innerHTML += arr[i].WorkCodeName;
-                }
-                else{
+                } else {
                     b.innerHTML = arr[i].WorkCodeName.substr(0, pos);
                     /*make the matching letters bold:*/
                     b.innerHTML += "<strong>" + arr[i].WorkCodeName.substr(pos, val.length) + "</strong>";
                     b.innerHTML += arr[i].WorkCodeName.substr(val.length + pos);
                 }
 
-
-                /*insert a input field that will hold the current array item's value:*/
-                b.innerHTML += "<input type='hidden' value='WorkCodes[" + arr[i].WorkCodeID + "][WorkCodeID]'>";
-
                 (function () {
-                    let workCodeName = arr[i].WorkCodeName;
-                    let workCodeFocus = i;
-                    let autoList = a.getElementsByTagName("div");;
+                    let workCode = arr[i];
+                    let workCodeFocus = focusPos;
+                    let autoList = a.getElementsByTagName("div");
 
                     /*execute a function when someone clicks on the item value (DIV element):*/
                     b.addEventListener("click", function (e) {
+
                         /*insert the value for the autocomplete text field:*/
-                        inp.value = workCodeName;
+                        inputEl.value = workCode.WorkCodeName;
+
+                        hiddenEl.setAttribute("value", workCode.WorkCodeID);
+
                         /*close the list of autocompleted values,
                         (or any other open lists of autocompleted values:*/
                         closeAllLists();
                     });
-
 
                     b.addEventListener("mouseover", function (e) {
                         currentFocus = workCodeFocus;
 
                         addActive(autoList);
                     });
-
                 })();
 
                 a.appendChild(b);
             }
-
-
         }
-        /*append the DIV element as a child of the autocomplete container:*/
-        this.parentNode.appendChild(a);
+
+        if (!found) {
+            hiddenEl.setAttribute("value", "");
+        }
+
+        if(a.childElementCount) {
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+        }
     }
 
     /*the autocomplete function takes two arguments,
@@ -83,11 +87,22 @@ function autocompleteWorkCodes(inp, arr) {
     let currentFocus;
 
     /*execute a function when someone writes in the text field:*/
-    inp.addEventListener("input", auto);
-    inp.addEventListener("focus", auto);
+    inputEl.addEventListener("input", auto);
+    inputEl.addEventListener("focus", auto);
+
+    inputEl.addEventListener("focusout", function (e) {
+        if (hiddenEl.value === '') this.value = '';
+    });
 
     /*execute a function presses a key on the keyboard:*/
-    inp.addEventListener("keydown", function (e) {
+    inputEl.addEventListener("keydown", function (e) {
+
+        /* tab */
+        if (e.keyCode === 9) {
+            closeAllLists();
+            return;
+        }
+
         let x = document.getElementById(this.id + "autocomplete-list");
         if (x) x = x.getElementsByTagName("div");
         if (e.keyCode === 40) {
@@ -135,7 +150,7 @@ function autocompleteWorkCodes(inp, arr) {
         except the one passed as an argument:*/
         let x = document.getElementsByClassName("autocomplete-items");
         for (let i = 0; i < x.length; i++) {
-            if (elmnt !== x[i] && elmnt !== inp) {
+            if (elmnt !== x[i] && elmnt !== inputEl) {
                 x[i].parentNode.removeChild(x[i]);
             }
         }
