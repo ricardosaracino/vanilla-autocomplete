@@ -2,19 +2,31 @@
 
 let __inputs = [];
 
-function autocompleteWorkCodes(inputEl, hiddenEl, arr) {
+function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
 
     __inputs.push(inputEl);
 
-    const auto = function () {
+    let opened = false;
+    let currentFocus = -1;
 
-        let a, b, i, focusPos = 0, found = false, val = this.value;
+    const auto = function (e) {
 
         closeAllLists();
 
+        if (e.type === "click") { // toggle with click
+            opened = !opened;
+            if (opened) {
+                return;
+            }
+        } else {
+            opened = true;
+        }
+
+        let a, b, i, focusPos = 0, found = false, val = this.value;
+
         currentFocus = -1;
 
-        a = document.createElement("DIV");
+        a = document.createElement("div");
         a.setAttribute("id", this.id + "-autocomplete-list");
         a.setAttribute("class", "autocomplete-items");
 
@@ -26,9 +38,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr) {
 
             if (pos !== -1) {
 
-                focusPos++;
-
-                b = document.createElement("DIV");
+                b = document.createElement("div");
 
                 if (pos === 0) {
                     b.innerHTML += arr[i].label;
@@ -39,15 +49,17 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr) {
                 }
 
                 (function () {
-                    let item = arr[i];
-                    let itemFocusPos = focusPos;
-                    let autoList = a.getElementsByTagName("div");
+                    const item = arr[i];
+                    const itemFocusPos = focusPos;
+                    const autoList = a.getElementsByTagName("div");
 
                     b.addEventListener("click", function () {
 
                         inputEl.value = item.label;
 
                         hiddenEl.setAttribute("value", item.value);
+
+                        cb();
 
                         closeAllLists();
                     });
@@ -59,12 +71,15 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr) {
                     });
                 })();
 
+                focusPos++;
+
                 a.appendChild(b);
             }
         }
 
         if (!found) {
             hiddenEl.setAttribute("value", "");
+            cb();
         }
 
         if (a.childElementCount) {
@@ -72,35 +87,35 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr) {
         }
     }
 
-    let currentFocus;
-
+    // inputEl.addEventListener("focus", auto);
+    inputEl.addEventListener("click", auto);
     inputEl.addEventListener("input", auto);
-    inputEl.addEventListener("focus", auto);
+
     inputEl.addEventListener("focusout", function () {
+        opened = false;
+        currentFocus = -1;
         if (hiddenEl.value === "") this.value = "";
     });
 
     inputEl.addEventListener("keydown", function (e) {
 
         if (e.keyCode === 9) { // tab
-            /* tab */
             closeAllLists();
-            return;
-        }
+        } else {
+            let x = document.getElementById(this.id + "-autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
 
-        let x = document.getElementById(this.id + "-autocomplete-list");
-        if (x) x = x.getElementsByTagName("div");
-
-        if (e.keyCode === 40) { // arrow down
-            currentFocus++;
-            addActive(x);
-        } else if (e.keyCode === 38) { // arrow up
-            currentFocus--;
-            addActive(x);
-        } else if (e.keyCode === 13) { // enter
-            e.preventDefault();
-            if (currentFocus > -1) {
-                if (x) x[currentFocus].click();
+            if (e.keyCode === 40) { // arrow down
+                currentFocus++;
+                addActive(x);
+            } else if (e.keyCode === 38) { // arrow up
+                currentFocus--;
+                addActive(x);
+            } else if (e.keyCode === 13) { // enter
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (x) x[currentFocus].click();
+                }
             }
         }
     });
