@@ -91,12 +91,12 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
     inputEl.addEventListener("click", auto);
     inputEl.addEventListener("paste", auto);
     inputEl.addEventListener("input", auto);
-
-    inputEl.addEventListener("focusout", function () {
+    inputEl.addEventListener("blur", function () {
         opened = false;
         currentFocus = -1;
         if (hiddenEl.value === "") this.value = "";
     });
+
 
     inputEl.addEventListener("keydown", function (e) {
 
