@@ -14,6 +14,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, valueChangedCb) {
         closeAllLists();
 
         if (e.type === "input" && e.data === undefined) { // clear search input
+            hiddenEl.setAttribute("value", "");
             return;
         }
         if (e.type === "click") { // toggle with click
@@ -94,7 +95,8 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, valueChangedCb) {
     inputEl.addEventListener("click", auto);
     inputEl.addEventListener("paste", auto);
     inputEl.addEventListener("input", auto);
-    inputEl.addEventListener("blur", function () {
+    inputEl.addEventListener("focusout", function () {
+        // blur not catching tab out
         // click down and holding on an autocomplete-items will clear the input
         opened = false;
         currentFocus = -1;
