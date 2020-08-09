@@ -10,11 +10,10 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
     let currentFocus = -1;
 
     const auto = function (e) {
-        console.log(e);
 
         closeAllLists();
 
-        if(e.type === "input" && e.data === undefined) { // clear search input
+        if (e.type === "input" && e.data === undefined) { // clear search input
             return;
         }
         if (e.type === "click") { // toggle with click
@@ -96,6 +95,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
     inputEl.addEventListener("paste", auto);
     inputEl.addEventListener("input", auto);
     inputEl.addEventListener("blur", function () {
+        // click down and holding on an autocomplete-items will clear the input
         opened = false;
         currentFocus = -1;
         if (hiddenEl.value === "") this.value = "";
