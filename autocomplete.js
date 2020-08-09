@@ -10,9 +10,13 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
     let currentFocus = -1;
 
     const auto = function (e) {
+        console.log(e);
 
         closeAllLists();
 
+        if(e.type === "input" && e.data === undefined) { // clear search input
+            return;
+        }
         if (e.type === "click") { // toggle with click
             opened = !opened;
             if (opened) {
