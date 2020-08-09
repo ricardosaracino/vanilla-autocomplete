@@ -89,6 +89,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
 
     // inputEl.addEventListener("focus", auto);
     inputEl.addEventListener("click", auto);
+    inputEl.addEventListener("paste", auto);
     inputEl.addEventListener("input", auto);
 
     inputEl.addEventListener("focusout", function () {
