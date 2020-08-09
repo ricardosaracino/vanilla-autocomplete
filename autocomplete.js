@@ -2,7 +2,7 @@
 
 let __inputs = [];
 
-function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
+function autocompleteWorkCodes(inputEl, hiddenEl, arr, valueChangedCb) {
 
     __inputs.push(inputEl);
 
@@ -62,7 +62,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
 
                         hiddenEl.setAttribute("value", item.value);
 
-                        cb();
+                        valueChangedCb();
 
                         closeAllLists();
                     });
@@ -82,7 +82,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, cb) {
 
         if (!found) {
             hiddenEl.setAttribute("value", "");
-            cb();
+            valueChangedCb();
         }
 
         if (a.childElementCount) {
