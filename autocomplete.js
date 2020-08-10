@@ -15,6 +15,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, valueChangedCb) {
 
         if (e.type === "input" && e.data === undefined) { // clear search input
             hiddenEl.setAttribute("value", "");
+            valueChangedCb();
             return;
         }
         if (this.value === "" && e.type === "mousedown") { // toggle with click
