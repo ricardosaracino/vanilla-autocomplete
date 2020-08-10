@@ -2,37 +2,45 @@
 <link type="text/css" rel="stylesheet" href="/resources/css/autocomplete.css?v={$resource_version}"/>
 
 <style type="text/css">
-    .autocomplete-items {
-        width: 700px;
-        max-height: 600px;
-    }
+
+	.autocomplete-input {
+		min-width: 350px;
+	}
+
+	.autocomplete-items {
+		width: 800px;
+		width: intrinsic; /* Safari/WebKit uses a non-standard name */
+		width: -moz-max-content; /* Firefox/Gecko */
+		width: -webkit-max-content; /* Chrome */
+		min-width: 350px;
+		max-height: 400px;
+	}
 </style>
 
 <script type="text/javascript" src="/resources/js/autocomplete.js?v={$resource_version}"></script>
 
-<div class="autocomplete" style="width:350px;">
-    <input type="search"
-           id="work-code-select-{$key}"
-           style="width: 100%;"
-           placeholder="Start Typing or Click to Toggle Dropdown"
-           value="{$WorkCodes[$WorkCodeID]->WorkCodeName|escape}">
+<div class="autocomplete">
+	<input type="search"
+		   class="autocomplete-input"
+		   id="work-code-select-{$key}"
+		   placeholder="Start Typing or Click to Toggle Dropdown"
+		   value="{$WorkCodes[$WorkCodeID]->WorkCodeName|escape}">
 
-    <input type="hidden"
-           name="WorkCodes[{$key}][WorkCodeID]"
-           value="{$WorkCodeID}">
+	<input type="hidden"
+		   name="WorkCodes[{$key}][WorkCodeID]"
+		   value="{$WorkCodeID}">
 </div>
 
 <script type="text/javascript">
 
     {literal}
 	const workCodeArr = Object.values(WorkCodes)
-			// .filter(wc => document.getElementById('CallTypeID').value === wc.CallTypeID)
-			.map(wc => {
-				let o = {};
-				o.value = wc.WorkCodeID;
-				o.label = wc.WorkCodeName;
-				return o;
-			});
+		.map(wc => {
+			let o = {};
+			o.value = wc.WorkCodeID;
+			o.label = wc.WorkCodeName;
+			return o;
+		});
     {/literal}
 
 	let cb;
