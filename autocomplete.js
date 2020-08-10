@@ -17,7 +17,7 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, valueChangedCb) {
             hiddenEl.setAttribute("value", "");
             return;
         }
-        if (e.type === "click") { // toggle with click
+        if (this.value === "" && e.type === "mousedown") { // toggle with click
             opened = !opened;
             if (opened) {
                 return;
@@ -57,20 +57,16 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, valueChangedCb) {
                     const itemFocusPos = focusPos;
                     const autoList = a.getElementsByTagName("div");
 
+                    // made mousedown to "fix" the focusout problem but i dont like it
                     b.addEventListener("click", function () {
-
                         inputEl.value = item.label;
-
                         hiddenEl.setAttribute("value", item.value);
-
                         valueChangedCb();
-
                         closeAllLists();
                     });
 
                     b.addEventListener("mouseover", function () {
                         currentFocus = itemFocusPos;
-
                         addActive(autoList);
                     });
                 })();
@@ -92,17 +88,16 @@ function autocompleteWorkCodes(inputEl, hiddenEl, arr, valueChangedCb) {
     }
 
     // inputEl.addEventListener("focus", auto);
-    inputEl.addEventListener("click", auto);
+    inputEl.addEventListener("mousedown", auto);
     inputEl.addEventListener("paste", auto);
     inputEl.addEventListener("input", auto);
     inputEl.addEventListener("focusout", function () {
         // blur not catching tab out
-        // click down and holding on an autocomplete-items will clear the input
+        // "click" was causing autocomplete-items will clear the input
         opened = false;
         currentFocus = -1;
-        if (hiddenEl.value === "") this.value = "";
+        if (hiddenEl.value === "") inputEl.value = "";
     });
-
 
     inputEl.addEventListener("keydown", function (e) {
 
